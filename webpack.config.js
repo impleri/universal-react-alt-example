@@ -1,29 +1,55 @@
-var path = require( 'path' );
-var webpack = require( 'webpack' );
+"use strict";
 
-var config = {
-	entry: {
-		boot: path.resolve( __dirname, 'js/boot.js' )
-	},
+var path = require("path"),
+    webpack = require("webpack");
 
-	output: {
-		path: path.resolve( __dirname, 'build' ),
-		filename: 'bundle.js'
-	},
+module.exports = {
+  devtool: "#inline-source-map",
+  entry: [
+    "webpack-hot-middleware/client",
+    "./client/index.js"
+  ],
 
-	module: {
-		loaders: [
-			{
-				test: /\.jsx?$/,
-				exclude: [/node_modules/, /vendor/],
-				loaders: ['babel-loader']
-			},
-			{ test: /\.json$/, loader: 'json-loader'}
-		]
-	},
+  output: {
+    path: path.join(__dirname, "build"),
+    filename: "bundle.js",
+    publicPath: "/assets/static/"
+  },
 
-	debug: false,
-	devtool: '#source-map'
+  plugins: [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin()
+  ],
+
+  resolve: {
+    alias: {},
+    extensions: ["", ".js", ".jsx"]
+  },
+
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loader: "babel",
+        exclude: /node_modules/,
+        include: __dirname,
+        query: {
+          presets: [
+            "react-hmre",
+            "es2015",
+            "stage-2",
+            "react"
+          ],
+          plugins: [
+            "transform-decorators-legacy"
+          ],
+        }
+      },
+      {
+        test: /\.css$/,
+        loader: "style!css",
+      },
+    ]
+  }
 };
-
-module.exports = config;
