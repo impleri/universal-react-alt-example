@@ -1,45 +1,39 @@
 import path from "path";
-import express from "express";
+import koa from "koa";
+import bodyParser from "koa-bodyparser";
+import mount from "koa-mount";
+import serve from "koa-static";
+import { devMiddleware, hotMiddleware } from "koa-webpack-middleware";
 import webpack from "webpack";
-import webpackDevMiddleware from "webpack-dev-middleware";
-import webpackHotMiddleware from "webpack-hot-middleware";
 import webpackConfig from "../webpack.config";
+import routeMiddleware from "./routes";
 import serverMiddleware from "./server";
 
-let app = express(),
+const app = koa(),
     compiler = webpack(webpackConfig);
 
-// Webpack middleware
-app.use(webpackDevMiddleware(compiler, {
+// Webpack hot reload middleware
+app.use(devMiddleware(compiler, {
   noInfo: true,
   publicPath: webpackConfig.output.publicPath
 }));
-app.use(webpackHotMiddleware(compiler));
+app.use(hotMiddleware(compiler));
 
 // Static assets middleware
-app.use("/assets/static", express.static(path.join(__dirname, "..", "build")));
-app.use("/assets", express.static(path.join(__dirname, "..", "assets")));
+app.use(mount(webpackConfig.output.publicPath, serve(webpackConfig.output.path)));
+app.use(mount("/assets", serve(path.join(__dirname, "..", "assets"))));
 
-// Server middleware
+// Body parsing middleware
+app.use(bodyParser());
+
+// API routes middleware
+app
+  .use(routeMiddleware.routes())
+  .use(routeMiddleware.allowedMethods());
+
+// React server middleware
 app.use(serverMiddleware);
 
-// example of handling 404 pages
-app.get("*", function(req, res) {
-  res.sendStatus(404);
-})
-
-// global error catcher, need four arguments
-app.use((err, req, res, next) => {
-  console.error("Error on request", req.method, req.url);
-  console.error(err.stack);
-
-  res.sendStatus(500);
-});
-
-process.on("uncaughtException", evt => {
-  console.log("uncaughtException: ", evt);
-});
-
-app.listen(process.env.PORT || 3000, function(){
+app.listen(process.env.PORT || 3000, () => {
   console.log("Listening on port", process.env.PORT || 3000);
 });

@@ -6,7 +6,8 @@ var path = require("path"),
 module.exports = {
   devtool: "#inline-source-map",
   entry: [
-    "webpack-hot-middleware/client",
+    "'eventsource-polyfill",
+    "webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",
     "./client/index.js"
   ],
 
@@ -35,8 +36,12 @@ module.exports = {
         exclude: /node_modules/,
         include: __dirname,
         query: {
+          env: {
+            development: {
+              presets: ['react-hmre']
+            }
+          },
           presets: [
-            "react-hmre",
             "es2015",
             "stage-2",
             "react"

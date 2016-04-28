@@ -30,30 +30,30 @@ function renderFullPage(content) {
   `
 };
 
-export default function middleware(req, res, next) {
-  match({routes, location: req.url}, (error, redirect, renderProps) => {
+export default async function middleware(context, next) {
+  await next();
+
+  match({routes, location: context.url}, (error, redirect, renderProps) => {
     if (error) {
-      return res.status(500).send(error.message);
+      context.throw(500, error.message);
+      return;
     }
 
     if (redirect) {
-      return res.redirect(302, redirect.pathname + redirect.search);
+      context.redirect(redirect.pathname + redirect.search);
+      return;
     }
 
     if (renderProps == null) {
-      return res.sendStatus(404);
+      context.status = 404;
+      return;
     }
 
-    try {
-      const iso = new Iso(),
-          initView = renderToString(<RouterContext {...renderProps} />);
+    const iso = new Iso(),
+        initView = renderToString(<RouterContext {...renderProps} />);
 
-      iso.add(initView, flux.flush());
-      res.status(200).send(renderFullPage(iso.render()));
-    } catch (err) {
-      console.log(`server error: ${err}`);
-      res.status(500).send(err.message);
-    }
+    iso.add(initView, flux.flush());
+    context.body = renderFullPage(iso.render());
   });
 };
 
