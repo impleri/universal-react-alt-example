@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 function getEnv(key, defaultValue) {
-  if (process.env[key]) {
+  if (process.env[key] != null) {
     return process.env[key];
   }
 
@@ -11,7 +11,7 @@ function getEnv(key, defaultValue) {
 let dsn = getEnv("MONGO_URL", false);
 
 if (!dsn) {
-    dsn = "mongodb://" + getEnv("MONGO_HOST", "127.0.0.1") + "/" + getEnv("MONGO_NAME", "cowtipping");
+  dsn = "mongodb://" + getEnv("MONGO_HOST", "127.0.0.1") + "/" + getEnv("MONGO_NAME", "appdb");
 }
 
 mongoose.connect(dsn);
