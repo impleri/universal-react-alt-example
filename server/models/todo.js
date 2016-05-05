@@ -8,7 +8,7 @@ var TodoSchema = mongoose.Schema({
     Todo = mongoose.model("Todo", TodoSchema);
 
 module.exports = {
-  find: function (completed, callback) {
+  find: function (completed) {
     let query = {};
 
     if (completed) {
@@ -17,16 +17,16 @@ module.exports = {
       query.completedAt = null;
     }
 
-    Todo.find(query, callback);
+    return Todo.find(query).exec();
   },
 
-  upsert: function (record, callback) {
+  upsert: function (record) {
     let search = {};
 
     if (record.id) {
       search.id = record.id;
     }
 
-    Todo.findOneAndUpdate(search, record, {upsert: true}, callback);
+    return Todo.findOneAndUpdate(search, record, {upsert: true});
   }
 };
