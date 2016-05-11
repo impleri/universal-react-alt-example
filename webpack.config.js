@@ -4,7 +4,7 @@ var path = require("path"),
     webpack = require("webpack"),
     production = {
         devtool: "#hidden-source-map",
-        entry: ["eventsource-polyfill"],
+        entry: ["eventsource-polyfill", "babel-polyfill"],
         plugins: [
           new webpack.optimize.OccurenceOrderPlugin(),
           new webpack.optimize.UglifyJsPlugin({
@@ -53,7 +53,7 @@ module.exports = {
           },
           presets: [
             "es2015",
-            "stage-2",
+            "stage-0",
             "react"
           ],
           plugins: [

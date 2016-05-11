@@ -1,4 +1,4 @@
-import koa from "koa";
+import Koa from "koa";
 import bodyParser from "koa-bodyparser";
 import mount from "koa-mount";
 import serve from "koa-static";
@@ -13,7 +13,7 @@ import webpackConfig from "../webpack.config";
 
 serverSources(SourceContainer);
 
-const app = koa(),
+const app = new Koa(),
     compiler = webpack(webpackConfig);
 
 // Webpack hot reload middleware

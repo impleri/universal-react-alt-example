@@ -1,6 +1,6 @@
 import TodoModel from "../models/todo";
 
-export default TodoSource = {
+export default {
   browse() {
     return TodoModel.find().then((todos) => {
       return {data: todos};

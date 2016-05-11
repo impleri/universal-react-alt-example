@@ -1,6 +1,6 @@
 import Todo from "../models/todo";
 
-export default function async getTodos(context, next) {
+export default async function getTodos(context, next) {
   await next();
 
   Todo.find(null, (error, docs) => {

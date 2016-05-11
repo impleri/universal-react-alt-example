@@ -53,7 +53,7 @@ export default async function middleware(context, next) {
         initView = renderToString(<RouterContext {...renderProps} />);
 
     iso.add(initView, flux.flush());
+    context.type = "html";
     context.body = renderFullPage(iso.render());
   });
 };
-

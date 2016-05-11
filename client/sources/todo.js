@@ -1,6 +1,6 @@
-import ajax from "../../common/util/ajax";
+import ajax from "../../common/utils/ajax";
 
-export default TodoSource = {
+export default {
   browse() {
     return ajax.api.get("todos").then((xhr, response) => {
       return response;
