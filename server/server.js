@@ -34,6 +34,7 @@ export default async function middleware(context, next) {
   await next();
 
   match({routes, location: context.url}, (error, redirect, renderProps) => {
+    console.log("Matching page", context.url, error, redirect);
     if (error) {
       context.throw(500, error.message);
       return;
@@ -55,5 +56,7 @@ export default async function middleware(context, next) {
     iso.add(initView, flux.flush());
     context.type = "html";
     context.body = renderFullPage(iso.render());
+
+    return;
   });
 };

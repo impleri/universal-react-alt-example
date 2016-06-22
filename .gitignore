@@ -7,5 +7,7 @@ pids
 *.pid
 *.seed
 
+.happypack
+
 /build
 /node_modules

@@ -2,21 +2,22 @@
 
 var path = require("path"),
     webpack = require("webpack"),
+    HappyPack = require("happypack"),
     production = {
-        devtool: "#hidden-source-map",
-        entry: ["eventsource-polyfill", "babel-polyfill"],
-        plugins: [
-          new webpack.optimize.OccurenceOrderPlugin(),
-          new webpack.optimize.UglifyJsPlugin({
-            compressor: {
-              warnings: false
-            }
-          })
-        ]
+      devtool: "#hidden-cheap-source-map",
+      entry: ["eventsource-polyfill", "babel-polyfill", "todomvc-app-css/index.css"],
+      plugins: [
+        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+          compressor: {
+            warnings: false
+          }
+        })
+      ]
     },
     development = {
       devtool: "#cheap-inline-source-map",
-      entry: production.entry.concat(["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000",]),
+      entry: production.entry.concat(["webpack-hot-middleware/client"]),
       plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
@@ -24,6 +25,18 @@ var path = require("path"),
       ]
     },
     config = (process.env.NODE_ENV === "production") ? production : development;
+
+config.plugins.push(new HappyPack({
+  id: "js",
+  loaders: ["babel"],
+  threads: 4
+}));
+
+config.plugins.push(new HappyPack({
+  id: "css",
+  loaders: ["style-loader", "css-loader"],
+  threads: 2
+}));
 
 module.exports = {
   devtool: config.devtool,
@@ -42,29 +55,14 @@ module.exports = {
     loaders: [
       {
         test: /\.jsx?$/,
-        loader: "babel",
+        loader: "happypack/loader?id=js",
         exclude: /node_modules/,
-        include: __dirname,
-        query: {
-          env: {
-            development: {
-              presets: ['react-hmre']
-            }
-          },
-          presets: [
-            "es2015",
-            "stage-0",
-            "react"
-          ],
-          plugins: [
-            "transform-decorators-legacy"
-          ],
-        }
+        include: __dirname
       },
       {
         test: /\.css$/,
-        loader: "style!css",
-      },
+        loader: "happypack/loader?id=css"
+      }
     ]
   }
 };

@@ -5,13 +5,10 @@ import serve from "koa-static";
 import { devMiddleware, hotMiddleware } from "koa-webpack-middleware";
 import path from "path";
 import webpack from "webpack";
+import Sources from "./sources/";
 import routeMiddleware from "./routes";
 import serverMiddleware from "./server";
-import serverSources from "./sources/";
-import SourceContainer from "../common/sources";
 import webpackConfig from "../webpack.config";
-
-serverSources(SourceContainer);
 
 const app = new Koa(),
     compiler = webpack(webpackConfig);

@@ -1,5 +1,6 @@
+import SourceContainer from "../../common/sources";
 import TodoSource from "./todo";
 
-export default function bootstrapSources(container) {
-  container.set("Todo", TodoSource);
-};
+SourceContainer.set("Todo", TodoSource);
+
+export default {};
