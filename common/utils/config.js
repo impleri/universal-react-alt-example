@@ -5,7 +5,7 @@ function get(key, defaultValue) {
   }
 
   return defaultValue;
-};
+}
 
 export default {
   get,

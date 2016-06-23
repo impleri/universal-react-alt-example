@@ -1,6 +1,5 @@
 import qwest from "qwest";
 import Config from "./config";
-import alt from "../flux";
 
 qwest.setDefaultDataType("json");
 

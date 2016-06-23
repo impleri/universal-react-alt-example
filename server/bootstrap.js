@@ -5,7 +5,7 @@ import serve from "koa-static";
 import { devMiddleware, hotMiddleware } from "koa-webpack-middleware";
 import path from "path";
 import webpack from "webpack";
-import Sources from "./sources/";
+import "./sources/";
 import routeMiddleware from "./routes";
 import serverMiddleware from "./server";
 import Config from "../common/utils/config";

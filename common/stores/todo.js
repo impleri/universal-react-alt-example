@@ -2,6 +2,7 @@ import { bind, createStore } from "alt-utils/lib/decorators";
 import Immutable from "immutable";
 import makeImmutable from "alt-utils/lib/ImmutableUtil";
 import flux from "../flux";
+import actions from "../actions/todo";
 
 @createStore(flux)
 @makeImmutable
@@ -15,7 +16,7 @@ class TodoStore {
     });
   }
 
-  // @bind(actions.startAction)
+  @bind(actions.startAction)
   startAsync() {
     if (this.state.get("asyncActive")) {
       throw `${this.displayName} already performing an async action`;
@@ -24,17 +25,17 @@ class TodoStore {
     this.setState(this.state.set("asyncActive", true));
   }
 
-  // @bind(actions.stopAction)
+  @bind(actions.stopAction)
   stopAsync() {
     this.setState(this.state.set("asyncActive", false));
   }
 
-  // @bind(actions.upsert)
+  @bind(actions.upsert)
   upsert(todo) {
     this.setState(this.state.setIn(["todos", todo.id], Immutable.fromJS(todo)));
   }
 
-  // @bind(actions.upsertMany)
+  @bind(actions.upsertMany)
   upsertMany(todos) {
     let newList = Immutable.Map(),
         index,

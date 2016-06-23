@@ -1,4 +1,4 @@
 import flux from "./flux";
-import stores from "./stores/";
+import "./stores/";
 
 export default flux;

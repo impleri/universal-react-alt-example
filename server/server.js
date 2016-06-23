@@ -1,7 +1,7 @@
 import Iso from "iso";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { Router, RouterContext, match } from "react-router";
+import { RouterContext, match } from "react-router";
 import flux from "../common/bootstrap";
 import routes from "../common/routes";
 import Config from "../common/utils/config";
@@ -29,7 +29,7 @@ function renderFullPage(content) {
     </body>
   </html>
   `
-};
+}
 
 export default async function middleware(context, next) {
   await next();

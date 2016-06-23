@@ -8,7 +8,7 @@ var TodoSchema = mongoose.Schema({
     Todo = mongoose.model("Todo", TodoSchema);
 
 module.exports = {
-  find: function (completed) {
+  find(completed) {
     let query = {};
 
     if (completed) {
@@ -20,7 +20,7 @@ module.exports = {
     return Todo.find(query).exec();
   },
 
-  upsert: function (record) {
+  upsert(record) {
     let search = {};
 
     if (record.id) {

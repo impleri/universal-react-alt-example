@@ -7,6 +7,7 @@ const ESCAPE_KEY = 27,
 
 export default class TodoItem extends React.Component {
   static propTypes = {
+    editing: React.PropTypes.bool.isRequired,
     onDestroy: React.PropTypes.func.isRequired,
     onSave: React.PropTypes.func.isRequired,
     onToggle: React.PropTypes.func.isRequired,
@@ -35,14 +36,14 @@ export default class TodoItem extends React.Component {
   }
 
   @autobind
-  handleBlur(event) {
+  handleBlur() {
     this.setState({
       editing: false
     });
   }
 
   @autobind
-  handleCancel(event) {
+  handleCancel() {
     this.setState({
       editing: false,
       editText: this.props.todo.title
@@ -57,7 +58,7 @@ export default class TodoItem extends React.Component {
   }
 
   @autobind
-  handleDestroy(event) {
+  handleDestroy() {
     this.props.onDestroy(this.props.todo.id);
   }
 
@@ -83,7 +84,7 @@ export default class TodoItem extends React.Component {
   }
 
   @autobind
-  handleSubmit(event) {
+  handleSubmit() {
     let val = this.state.editText.trim();
 
     this.props.onSave(this.props.todo.id, val);
@@ -94,7 +95,7 @@ export default class TodoItem extends React.Component {
   }
 
   @autobind
-  handleToggle(event) {
+  handleToggle() {
     this.props.onToggle(this.props.todo.id, !this.props.todo.completed);
   }
 
@@ -108,27 +109,26 @@ export default class TodoItem extends React.Component {
       <li className={classes}>
         <div className="view">
           <input
-            checked={this.props.todo.completed}
-            className="toggle"
-            onChange={this.handleToggle}
-            type="checkbox"
-            value="1"
+              checked={this.props.todo.completed}
+              className="toggle"
+              onChange={this.handleToggle}
+              type="checkbox"
+              value="1"
           />
           <label onDoubleClick={this.handleEdit}>
             {this.props.todo.title}
           </label>
           <button
-            className="destroy"
-            onClick={this.handleDestroy}
+              className="destroy"
+              onClick={this.handleDestroy}
           />
         </div>
         <input
-          className="edit"
-          onBlur={this.handleBlur}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          ref="editField"
-          value={this.state.editText}
+            className="edit"
+            onBlur={this.handleBlur}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            value={this.state.editText}
         />
       </li>
     )
