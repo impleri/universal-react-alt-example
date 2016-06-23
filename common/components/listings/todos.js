@@ -1,7 +1,7 @@
 import autobind from "autobind-decorator";
 import React from "react";
-import TodoItem from "../partials/Todo";
-import actions from "../../actions/Todo";
+import TodoItem from "../partials/todo";
+import actions from "../../actions/todo";
 
 export default class TodosListing extends React.Component {
   @autobind

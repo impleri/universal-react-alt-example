@@ -1,1 +1,1 @@
-import TodoStore from "./Todo";
+import TodoStore from "./todo";
