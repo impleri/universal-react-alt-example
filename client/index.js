@@ -6,7 +6,7 @@ import { AppContainer } from "react-hot-loader";
 import "./sources/";
 import flux from "../common/bootstrap";
 import Config from "../common/utils/config";
-import App from "../common/app";
+import App from "./app";
 
 const rootEl = document.getElementById("app");
 
@@ -28,8 +28,8 @@ Iso.bootstrap(function (state) {
 });
 
 if (module.hot) {
-  module.hot.accept("../common/app", () => {
-    const NextApp = require("../common/app").default;
+  module.hot.accept("./app", () => {
+    const NextApp = require("./app").default;
     render(
       <AppContainer>
          <NextApp />
