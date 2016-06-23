@@ -1,17 +1,10 @@
 import mongoose from "mongoose";
+import Config from "../common/utils/config";
 
-function getEnv(key, defaultValue) {
-  if (process.env[key] != null) {
-    return process.env[key];
-  }
-
-  return defaultValue;
-}
-
-let dsn = getEnv("MONGO_URL", false);
+let dsn = Config.get("MONGO_URL", false);
 
 if (!dsn) {
-  dsn = "mongodb://" + getEnv("MONGO_HOST", "127.0.0.1") + "/" + getEnv("MONGO_NAME", "appdb");
+  dsn = "mongodb://" + Config.get("MONGO_HOST", "127.0.0.1") + "/" + Config.get("MONGO_NAME", "appdb");
 }
 
 mongoose.connect(dsn);

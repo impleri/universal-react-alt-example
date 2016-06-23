@@ -15,7 +15,7 @@ export default class TodoActions {
       dispatch();
       this.startAction();
 
-      let response = source.delete(id)
+      source.delete(id)
         .then((response) => {
           this.stopAction.defer();
           return response;
@@ -40,7 +40,7 @@ export default class TodoActions {
       }
 
 
-       let response = callback.then((response) => {
+      callback.then((response) => {
           this.stopAction.defer();
           return response;
         }).catch((error) => {
@@ -54,7 +54,7 @@ export default class TodoActions {
       dispatch();
       this.startAction();
 
-      let response = source.edit(id, {completed})
+      source.edit(id, {completed})
         .then((response) => {
           this.stopAction.defer();
           return response;

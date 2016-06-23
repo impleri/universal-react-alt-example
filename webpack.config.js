@@ -1,8 +1,10 @@
 "use strict";
 
 var path = require("path"),
+    fs = require("fs"),
     webpack = require("webpack"),
     HappyPack = require("happypack"),
+    DotEnv = require("dotenv-safe"),
     production = {
       devtool: "#hidden-cheap-source-map",
       entry: ["eventsource-polyfill", "babel-polyfill", "todomvc-app-css/index.css"],
@@ -25,6 +27,10 @@ var path = require("path"),
       ]
     },
     config = (process.env.NODE_ENV === "production") ? production : development;
+
+config.plugins.push(new webpack.DefinePlugin({
+  "process.env": JSON.stringify(DotEnv.parse(fs.readFileSync("./.env")))
+}));
 
 config.plugins.push(new HappyPack({
   id: "js",

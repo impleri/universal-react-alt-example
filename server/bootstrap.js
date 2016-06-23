@@ -8,13 +8,16 @@ import webpack from "webpack";
 import Sources from "./sources/";
 import routeMiddleware from "./routes";
 import serverMiddleware from "./server";
+import Config from "../common/utils/config";
 import webpackConfig from "../webpack.config";
 
 const app = new Koa(),
     compiler = webpack(webpackConfig);
 
-// Webpack hot reload middleware
-if (process.env.NODE_ENV !== "production") {
+// Webpack middleware
+if (Config.get("NODE_ENV") === "production") {
+  app.use(mount(webpackConfig.output.publicPath, serve(webpackConfig.output.path)));
+} else {
   app.use(devMiddleware(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath
@@ -23,7 +26,6 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Static assets middleware
-app.use(mount(webpackConfig.output.publicPath, serve(webpackConfig.output.path)));
 app.use(mount("/assets", serve(path.join(__dirname, "..", "assets"))));
 
 // Body parsing middleware
@@ -37,6 +39,8 @@ app
 // React server middleware
 app.use(serverMiddleware);
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Listening on port", process.env.PORT || 3000);
+const port = Config.get("APP_PORT", 3000);
+
+app.listen(port, () => {
+  console.info(`Listening on port ${port}`);
 });
