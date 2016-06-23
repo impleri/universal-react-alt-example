@@ -1,12 +1,14 @@
+import "console-shim";
 import Iso from "iso";
 import React from "react";
 import { render } from "react-dom";
-import { Router, browserHistory } from "react-router";
-import "console-shim";
+import { AppContainer } from "react-hot-loader";
 import "./sources/";
 import flux from "../common/bootstrap";
-import routes from "../common/routes";
 import Config from "../common/utils/config";
+import App from "../common/app";
+
+const rootEl = document.getElementById("app");
 
 // Debug client-side
 if (Config.isTrue("APP_DEBUG") && window) {
@@ -18,7 +20,21 @@ Iso.bootstrap(function (state) {
   flux.bootstrap(state);
 
   render(
-    <Router history={browserHistory} routes={routes} />,
-    document.getElementById("app")
+    <AppContainer>
+      <App />
+    </AppContainer>,
+    rootEl
   );
 });
+
+if (module.hot) {
+  module.hot.accept("../common/app", () => {
+    const NextApp = require("../common/app").default;
+    render(
+      <AppContainer>
+         <NextApp />
+      </AppContainer>,
+      rootEl
+    );
+  });
+}

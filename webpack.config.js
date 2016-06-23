@@ -5,7 +5,7 @@ var path = require("path"),
     DotEnv = require("dotenv-safe"),
     production = {
       devtool: "#hidden-cheap-source-map",
-      entry: ["eventsource-polyfill", "babel-polyfill", "todomvc-app-css/index.css"],
+      entry: ["babel-polyfill", "todomvc-app-css/index.css"],
       plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({
@@ -17,7 +17,10 @@ var path = require("path"),
     },
     development = {
       devtool: "#cheap-inline-source-map",
-      entry: production.entry.concat(["webpack-hot-middleware/client"]),
+      entry: [
+        "webpack-hot-middleware/client",
+        "react-hot-loader/patch"
+      ].concat(production.entry),
       plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),

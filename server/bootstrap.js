@@ -20,7 +20,10 @@ if (Config.get("NODE_ENV") === "production") {
 } else {
   app.use(devMiddleware(compiler, {
     noInfo: true,
-    publicPath: webpackConfig.output.publicPath
+    publicPath: webpackConfig.output.publicPath,
+    stats: {
+      colors: true
+    }
   }));
   app.use(hotMiddleware(compiler));
 }
