@@ -35,10 +35,6 @@ export default async function middleware(context, next) {
   await next();
 
   match({routes, location: context.url}, (error, redirect, renderProps) => {
-    if (Config.isTrue("APP_DEBUG")) {
-      console.info("Matching page", context.url, error, redirect);
-    }
-
     if (error) {
       context.throw(500, error.message);
       return;
@@ -49,9 +45,12 @@ export default async function middleware(context, next) {
       return;
     }
 
-    if (renderProps == null) {
-      context.status = 404;
+    if (!renderProps) {
       return;
+    }
+
+    if (Config.isTrue("APP_DEBUG")) {
+      console.info("Matching page", context.url, error, redirect);
     }
 
     const iso = new Iso(),

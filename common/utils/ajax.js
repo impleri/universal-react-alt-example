@@ -1,3 +1,4 @@
+import autobind from "autobind-decorator";
 import qwest from "qwest";
 import Config from "./config";
 
@@ -44,6 +45,22 @@ function callAjax(method, endpoint, data, options = {}) {
   return request;
 }
 
+function formatUrl(path, base) {
+  if (!base) {
+    return path;
+  }
+
+  if (base.match(/\/$/)) {
+    base = base.slice(0, -1);
+  }
+
+  if (path.match(/^\//)) {
+    path = path.slice(1);
+  }
+
+  return `${base}/${path}`;
+}
+
 function mockRequest(method, endpoint, data) {
   return new Promise(function (resolve) {
     setTimeout(function () {
@@ -53,28 +70,38 @@ function mockRequest(method, endpoint, data) {
   });
 }
 
-export default {
+class AjaxWrapper {
+  constructor(base) {
+    this.base = base;
+  }
+
+  @autobind
   get(path, data, options = {}) {
-    return callAjax("GET", path, data, options);
-  },
+    return callAjax("GET", formatUrl(path, this.base), data, options);
+  }
 
+  @autobind
   post(path, data, options = {}) {
-    return callAjax("POST", path, data, options);
-  },
+    return callAjax("POST", formatUrl(path, this.base), data, options);
+  }
 
+  @autobind
   patch(path, data, options = {}) {
-    return callAjax("PATCH", path, data, options);
-  },
+    return callAjax("PATCH", formatUrl(path, this.base), data, options);
+  }
 
+  @autobind
   delete (path, data, options = {}) {
-    return callAjax("DELETE", path, data, options);
-  },
+    return callAjax("DELETE", formatUrl(path, this.base), data, options);
+  }
 
+  @autobind
   form (path, data, options = {}) {
     options.dataType = "formdata";
-    return callAjax("POST", path, data, options);
-  },
+    return callAjax("POST", formatUrl(path, this.base), data, options);
+  }
 
+  @autobind
   download(path, token) {
     if (token.match(/^bearer/i)) {
       token = token.substr("bearer ".length);
@@ -84,6 +111,11 @@ export default {
       path += `?token=${token}`;
     }
 
-    window.location.href = path;
+    window.location.href = formatUrl(path, this.base);
   }
 }
+
+const ajaxClass = new AjaxWrapper();
+ajaxClass.api = new AjaxWrapper(Config.get("APP_PREFIX", "/api"));
+
+export default ajaxClass;

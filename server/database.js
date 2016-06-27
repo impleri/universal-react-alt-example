@@ -8,5 +8,6 @@ if (!dsn) {
 }
 
 mongoose.connect(dsn);
+mongoose.Promise = global.Promise;
 
 export default mongoose;

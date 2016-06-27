@@ -7,7 +7,23 @@ const source = SourceContainer.get("Todo");
 @createActions(flux)
 export default class TodoActions {
   constructor() {
-    this.generateActions("startAction", "stopAction", "upsert", "upsertMany");
+    this.generateActions("delete", "startAction", "stopAction", "upsert", "upsertMany");
+  }
+
+  fetch() {
+    return (dispatch) => {
+      dispatch();
+      this.startAction();
+
+      source.browse()
+        .then((response) => {
+          this.upsertMany(response.todos);
+          this.stopAction.defer();
+          return response;
+        }).catch((error) => {
+          this.catchError(error);
+        });
+    }
   }
 
   remove(id) {
@@ -17,6 +33,8 @@ export default class TodoActions {
 
       source.delete(id)
         .then((response) => {
+          console.log("Deleted");
+          this.delete(id);
           this.stopAction.defer();
           return response;
         }).catch((error) => {
@@ -27,13 +45,15 @@ export default class TodoActions {
 
   save(title, id) {
     return (dispatch) => {
+      if (!title || title.length === 0) {
+        this.delete(id);
+      }
+
       let callback;
       dispatch();
       this.startAction();
 
-      if (!title || title.length === 0) {
-        callback = source.delete(id);
-      } else if (id) {
+      if (id) {
         callback = source.edit(id, {title});
       } else {
         callback = source.add({title});
@@ -41,6 +61,7 @@ export default class TodoActions {
 
 
       callback.then((response) => {
+          this.upsertMany(response.todos);
           this.stopAction.defer();
           return response;
         }).catch((error) => {
@@ -54,14 +75,14 @@ export default class TodoActions {
       dispatch();
       this.startAction();
 
-      source.edit(id, {completed})
+      source.edit(id, {completedAt: (completed) ? new Date() : null})
         .then((response) => {
+          this.upsertMany(response.todos);
           this.stopAction.defer();
           return response;
         }).catch((error) => {
           this.catchError(error);
         });
     }
-
   }
 }

@@ -16,6 +16,11 @@ class TodoStore {
     });
   }
 
+  @bind(actions.delete)
+  delete(id) {
+    this.setState(this.state.deleteIn(["todos", todo.id]));
+  }
+
   @bind(actions.startAction)
   startAsync() {
     if (this.state.get("asyncActive")) {

@@ -6,7 +6,7 @@ import { devMiddleware, hotMiddleware } from "koa-webpack-middleware";
 import path from "path";
 import webpack from "webpack";
 import "./sources/";
-import routeMiddleware from "./routes";
+import routes from "./routes";
 import serverMiddleware from "./server";
 import Config from "../common/utils/config";
 import webpackConfig from "../webpack.config";
@@ -35,9 +35,7 @@ app.use(mount("/assets", serve(path.join(__dirname, "..", "assets"))));
 app.use(bodyParser());
 
 // API routes middleware
-app
-  .use(routeMiddleware.routes())
-  .use(routeMiddleware.allowedMethods());
+routes.bootstrap(app);
 
 // React server middleware
 app.use(serverMiddleware);
