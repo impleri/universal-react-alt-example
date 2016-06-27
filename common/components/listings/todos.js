@@ -59,7 +59,7 @@ export default class TodosListing extends React.Component {
   render() {
     return (
       <ul className="todo-list">
-        {this.props.todos.map(todo => this.renderItem(todo))}
+        {this.props.todos.map((todo) => this.renderItem(todo))}
       </ul>
     )
   }

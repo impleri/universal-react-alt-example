@@ -1,5 +1,4 @@
 import ajax from "../../common/utils/ajax";
-import Config from "../../common/utils/config";
 
 const todosRoot = "/todos";
 

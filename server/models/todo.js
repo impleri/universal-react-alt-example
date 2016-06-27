@@ -6,13 +6,13 @@ const TodoSchema = mongoose.Schema({
       completedAt: {type: Date, default: null}
     });
 
-TodoSchema.virtual('completed').get(function() {
+TodoSchema.virtual("completed").get(function() {
   return (!!this.completedAt);
 });
 
 TodoSchema.set("toObject", {
   getters: true,
-  transform: (doc, ret, options) => {
+  transform: (doc, ret) => {
     delete ret._id;
     delete ret.__v;
     delete ret.createdAt;
@@ -32,7 +32,7 @@ export default {
       todos = [todos];
     }
 
-    return todos.map(todo => {
+    return todos.map((todo) => {
       return todo.toObject();
     });
   },

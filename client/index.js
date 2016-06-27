@@ -32,7 +32,7 @@ if (module.hot) {
     const NextApp = require("./app").default;
     render(
       <AppContainer>
-         <NextApp />
+        <NextApp />
       </AppContainer>,
       rootEl
     );

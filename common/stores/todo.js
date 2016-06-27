@@ -18,7 +18,7 @@ class TodoStore {
 
   @bind(actions.delete)
   delete(id) {
-    this.setState(this.state.deleteIn(["todos", todo.id]));
+    this.setState(this.state.deleteIn(["todos", id]));
   }
 
   @bind(actions.startAction)

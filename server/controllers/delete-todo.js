@@ -4,10 +4,10 @@ export default async function deleteTodo(context, id, next) {
   await next();
 
   return Todo.delete(id)
-    .then(docs => {
+    .then(() => {
       context.status = 204;
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       context.throw(error.message);
     });

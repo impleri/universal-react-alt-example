@@ -14,7 +14,7 @@ function generateRoute(path, callback, app, method = "get") {
   }
 
   app.use(router[method](`${prefix}/${path}`, callback));
-};
+}
 
 export default {
   bootstrap(app) {
