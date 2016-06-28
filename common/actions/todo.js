@@ -33,7 +33,6 @@ export default class TodoActions {
 
       source.delete(id)
         .then((response) => {
-          console.log("Deleted");
           this.delete(id);
           this.stopAction.defer();
           return response;

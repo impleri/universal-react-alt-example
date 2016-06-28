@@ -6,7 +6,9 @@ import TodosPage from "./components/pages/todos";
 
 export default (
   <Route component={AppLayout} path="/">
-    <Route component={TodosPage} path="todos" />
+    <Route component={TodosPage} path="todos">
+        <Route component={TodosPage} path=":type" />
+    </Route>
     <IndexRoute component={HomePage} />
   </Route>
 );

@@ -5,7 +5,7 @@ export default class TodosPage extends React.Component {
   render() {
     return (
       <div>
-        <TodosListing />
+        <TodosListing type={this.props.params.type} />
       </div>
     )
   }
