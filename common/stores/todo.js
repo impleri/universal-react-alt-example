@@ -11,28 +11,13 @@ class TodoStore {
 
   constructor() {
     this.state = Immutable.Map({
-      todos: Immutable.Map({}),
-      asyncActive: false
+      todos: Immutable.Map({})
     });
   }
 
   @bind(actions.delete)
   delete(id) {
     this.setState(this.state.deleteIn(["todos", id]));
-  }
-
-  @bind(actions.startAction)
-  startAsync() {
-    if (this.state.get("asyncActive")) {
-      throw `${this.displayName} already performing an async action`;
-    }
-
-    this.setState(this.state.set("asyncActive", true));
-  }
-
-  @bind(actions.stopAction)
-  stopAsync() {
-    this.setState(this.state.set("asyncActive", false));
   }
 
   @bind(actions.upsert)

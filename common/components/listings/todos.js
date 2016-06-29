@@ -33,6 +33,50 @@ export default class TodosListing extends React.Component {
     return {todos: todos.toList().toJS()};
   }
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      all: false,
+      todos: this.filterTodos(props.todos, props.type)
+    };
+  }
+
+  componentWillReceiveProps(newProps) {
+    let todos = this.filterTodos(newProps.todos, newProps.type);
+    this.setState({
+      all: (todos.length && !this.filterTodos(todos, "active").length),
+      todos
+    });
+  }
+
+  filterTodos(rawTodos, type) {
+    return rawTodos.filter((todo) => {
+      let val = true;
+
+      switch (type) {
+        case "active":
+          val = !todo.completed;
+          break;
+
+        case "completed":
+          val = todo.completed;
+          break;
+
+        default:
+          break;
+      }
+
+      return val;
+    });
+  }
+
+  @autobind
+  handleClear() {
+    this.filterTodos(this.state.todos, "completed")
+      .forEach((todo) => actions.remove(todo.id));
+  }
+
   @autobind
   handleDestroy(id) {
     actions.remove(id);
@@ -50,7 +94,8 @@ export default class TodosListing extends React.Component {
 
   @autobind
   handleToggleAll(event) {
-    console.info("Toggle all", event.target.value);
+    this.state.todos.forEach((todo) => actions.toggle(todo.id, event.target.checked));
+    this.setState({all: (event.target.checked)})
   }
 
   renderItem(item) {
@@ -81,7 +126,7 @@ export default class TodosListing extends React.Component {
 
     return (
       <section className="main">
-        <input className="toggle-all" type="checkbox" onChange={this.handleToggleAll} />
+        <input className="toggle-all" type="checkbox" checked={this.state.all} onChange={this.handleToggleAll} />
         <ul className="todo-list">
           {todos.map((todo) => this.renderItem(todo))}
         </ul>
@@ -110,33 +155,24 @@ export default class TodosListing extends React.Component {
             <Link to="/todos/completed" activeClassName="selected">Completed</Link>
           </li>
         </ul>
+        {this.renderClearButton()}
       </footer>
     )
   }
 
+  renderClearButton() {
+    if (this.filterTodos(this.state.todos, "completed").length) {
+      return <button className="clear-completed" onClick={this.handleClear}>Clear completed</button>;
+    }
+  }
+
   render() {
-    let todos = this.props.todos.filter((todo) => {
-          switch (this.props.type) {
-            case "active":
-              return !todo.completed;
-              break;
-
-            case "completed":
-              return todo.completed;
-              break;
-
-            default:
-              return true;
-          }
-        }),
-        remain = this.props.todos.filter((todo) => {
-          return !todo.completed;
-        }).length;
+    let remain = this.filterTodos(this.props.todos, "active").length;
 
     return (
       <section className="todoapp">
         {this.renderHeader()}
-        {this.renderList(todos)}
+        {this.renderList(this.state.todos)}
         {this.renderFooter(remain)}
       </section>
     )
